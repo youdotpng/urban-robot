@@ -1,5 +1,5 @@
 
-
+#HELLO IM TYPING
 class Piece:
     def __init__(self, name = 'pawn_0_U', str_loc = 'A2', mov_count = 0):
         self.name = name
