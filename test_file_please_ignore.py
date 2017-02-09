@@ -35,6 +35,32 @@ for i in range(0,8):
                 pygame.draw.rect(window,WHITE,(i*(window_width/8),j*(window_height/8),window_width/8,window_height/8))
 
 
+                
+#-------Piece Information
+sprite_sheet = pygame.image.load("chess.jpg")
+
+SPRT_RECT_X=0  
+SPRT_RECT_Y=0
+#This is where the sprite is found on the sprite_sheet
+
+LEN_SPRT_X=50
+LEN_SPRT_Y=50
+#This is the length of the sprite
+
+ #Locate the sprite you want
+white=[0]*6
+black=[0]*6
+
+#--Set Sprites for white and black teams
+for i in range(0,6):
+    sprite_sheet.set_clip(pygame.Rect(SPRT_RECT_X, SPRT_RECT_Y + 50*i, LEN_SPRT_X, LEN_SPRT_Y))
+    white[i] = sprite_sheet.subsurface(sprite_sheet.get_clip())
+    sprite_sheet.set_clip(pygame.Rect(SPRT_RECT_X + 50, SPRT_RECT_Y + 50*i, LEN_SPRT_X, LEN_SPRT_Y))
+    black[i] = sprite_sheet.subsurface(sprite_sheet.get_clip()) #Extract the sprite you want
+
+#--Variables for piece setting conditions
+set_pieces = True
+x = y = 0
 
 # Loop until the user clicks the close button.
 done = False
@@ -44,6 +70,13 @@ clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
 while not done:
+    if set_pieces:
+        for i in range(0,6):
+            set_pieces = False
+            window.blit(white[i],(x,y))
+            window.blit(black[i],(x,y+450))
+            x += 50
+            pygame.display.flip()
     # --- Main event loop
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicked close
