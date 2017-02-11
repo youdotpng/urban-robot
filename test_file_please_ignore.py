@@ -7,29 +7,50 @@ GREEN    = (   0, 255,   0)
 RED      = ( 255,   0,   0)
 BLUE     = (   0,   0, 255)
 
-def square_print(pos,pos2):
-        x = int(pos[0] // (window_width/8))
-        y = int(pos[1] // (window_height/8))
-        x2 = int(pos2[0] // (window_width/8))
-        y2 = int(pos2[1] // (window_height/8))
-        pygame.draw.rect(window,RED,(x*(window_width/8.0),y*(window_height/8.0),window_width/8.0,window_height/8.0))
-        #print (x)
-        #print (y)
-        return (pos)
-        
+
+
+def square_print(pos):
+        finish = False
+        while(not finish):
+            if (select_mouse_pos[0] < pos[0]) and (select_mouse_pos[0] >pos[0]+square_width) and (select_mouse_pos[1] < pos[1]) and (select_mouse_pos[1] > pos[1]+square_height):
+                x = int(pygame.mouse.get_pos()[0] // (window_width/8))
+                y = int(pygame.mouse.get_pos()[1] // (window_height/8))
+                #x2 = int(pos2[0] // (window_width/8))
+                #y2 = int(pos2[1] // (window_height/8))
+                window.blit(black[4],x+(square_width - sprite_width)/2,y+(square_height - sprite_height)/2)
+                if x+y%2 == 1:
+                    pygame.draw.rect(window,WHITE,(x*(window_width/8.0),y*(window_height/8.0),window_width/8.0,window_height/8.0))
+                else:pygame.draw.rect(window,BLACK,(x*(window_width/8.0),y*(window_height/8.0),window_width/8.0,window_height/8.0))
+                #print (x)
+                #print (y)
+                finish = True
+                return (pos)
+    
 
 
 
 #Make a window
 pygame.init()
-window_width = 500
-window_height = 500
+window_width = 512
+window_height = 512
 window_dim = (window_width,window_height)
 window = pygame.display.set_mode(window_dim)
 window.fill(BLUE)
+
+square_width = window_width/8
+square_height = window_height/8
+sprite_width = 50
+sprite_height = 50
+
+
+#for testing
+red_pos = (5*square_width,0)
+#Board logic x+y%2 == 0 -> black square, x=y%2 ==1  -> white square
+
 for i in range(0,8):
         for j in range(0,8):
-            if j%2 ==i%2:
+            #if j%2 ==i%2:
+            if (i+j)%2 == 0:
                 pygame.draw.rect(window,BLACK,(i*(window_width/8),j*(window_height/8),window_width/8,window_height/8))
             else:
                 pygame.draw.rect(window,WHITE,(i*(window_width/8),j*(window_height/8),window_width/8,window_height/8))
@@ -37,7 +58,7 @@ for i in range(0,8):
 
                 
 #-------Piece Information
-sprite_sheet = pygame.image.load("chess.jpg")
+sprite_sheet = pygame.image.load("Chees_piece.png")
 
 SPRT_RECT_X=0  
 SPRT_RECT_Y=0
@@ -53,9 +74,9 @@ black=[0]*6
 
 #--Set Sprites for white and black teams
 for i in range(0,6):
-    sprite_sheet.set_clip(pygame.Rect(SPRT_RECT_X, SPRT_RECT_Y + 50*i, LEN_SPRT_X, LEN_SPRT_Y))
+    sprite_sheet.set_clip(pygame.Rect(SPRT_RECT_X, SPRT_RECT_Y + sprite_height*i, LEN_SPRT_X, LEN_SPRT_Y))
     white[i] = sprite_sheet.subsurface(sprite_sheet.get_clip())
-    sprite_sheet.set_clip(pygame.Rect(SPRT_RECT_X + 50, SPRT_RECT_Y + 50*i, LEN_SPRT_X, LEN_SPRT_Y))
+    sprite_sheet.set_clip(pygame.Rect(SPRT_RECT_X + sprite_width, SPRT_RECT_Y + sprite_width*i, LEN_SPRT_X, LEN_SPRT_Y))
     black[i] = sprite_sheet.subsurface(sprite_sheet.get_clip()) #Extract the sprite you want
 
 #--Variables for piece setting conditions
@@ -72,10 +93,11 @@ clock = pygame.time.Clock()
 while not done:
     if set_pieces:
         for i in range(0,6):
+           # the x location of the sprite is given by (x_square + (sq_width - sprite_size)/2)
             set_pieces = False
-            window.blit(white[i],(x,y))
-            window.blit(black[i],(x,y+450))
-            x += 50
+            window.blit(white[i],(x+(square_width - sprite_width)/2,y+(square_height - sprite_height)/2+7*square_height))
+            window.blit(black[i],(x+(square_width - sprite_width)/2,y+(square_height - sprite_height)/2))
+            x += square_width
             pygame.display.flip()
     # --- Main event loop
     for event in pygame.event.get(): # User did something
@@ -118,6 +140,8 @@ while not done:
     elif event.type == pygame.MOUSEBUTTONDOWN:
       print("User pressed a mouse button")
       select_mouse_pos = pygame.mouse.get_pos()
-      square_print(select_mouse_pos,previous_mouse_pos)
+      if (select_mouse_pos[0] >= red_pos[0]) and (select_mouse_pos[0] <= red_pos[0]+square_width) and (select_mouse_pos[1] >= red_pos[1]) and (select_mouse_pos[1] <= red_pos[1]+square_height):
+           red_pos = square_print(select_mouse_pos)
+      continue
 pygame.quit()
 quit()
