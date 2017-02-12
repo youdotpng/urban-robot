@@ -124,9 +124,11 @@ while not done:
             # the x location of the sprite is given by:
             # (x_square + (sq_width - sprite_size)/2)
             set_pieces = False
-            window.blit(white[i], (x+(square_width - sprite_width)/2,
+            window.blit(white[i],
+                        (x+(square_width - sprite_width)/2,
                         y+(square_height - sprite_height)/2+7*square_height))
-            window.blit(black[i], (x+(square_width - sprite_width)/2,
+            window.blit(black[i],
+                        (x+(square_width - sprite_width)/2,
                         y+(square_height - sprite_height)/2))
             x += square_width
             pygame.display.flip()
