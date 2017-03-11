@@ -1,5 +1,5 @@
 import pygame
-
+from Chess_v0_3 import *
 # Define some colors
 BLACK = (   0,   0,   0)
 WHITE = ( 255, 255, 255)
@@ -8,13 +8,14 @@ RED   = ( 255,   0,   0)
 BLUE  = (   0,   0, 255)
 
 
-def square_print(pos):
+def piece_move(pos):
         finish = False
         print("selected")
         while(not finish):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:  # If user clicked close
                     done = True  # Flag that we are done so we exit this loop
+                    pygame.quit()
                     quit
                 if event.type == pygame.MOUSEBUTTONDOWN: 
                     print("This works")
@@ -73,6 +74,11 @@ sprite_height = 50
 
 
 # for testing
+B, Black, White = Boardset()
+test_pawn = Pawn()
+print(B.board)
+print(test_pawn.get_name())
+print(test_pawn.get_loc())
 pawn_pos = (5*square_width, 0)
 # Board logic x+y%2 == 0 -> black square, x=y%2 ==1  -> white square
 
@@ -184,13 +190,21 @@ while not done:
             print("User let go of a key.")
         elif event.type == pygame.MOUSEBUTTONDOWN:
             print("User pressed a mouse button")
-            select_mouse_pos = pygame.mouse.get_pos()
-            print(select_mouse_pos[0])
-            if ((select_mouse_pos[0] >= pawn_pos[0]) and
-                    (select_mouse_pos[0] <= pawn_pos[0]+square_width) and
-                    (select_mouse_pos[1] >= pawn_pos[1]) and
-                    (select_mouse_pos[1] <= pawn_pos[1]+square_height)):
-                        pawn_pos = square_print(select_mouse_pos)
+            select_row, select_col = pygame.mouse.get_pos()
+            select_row_B = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][select_row
+                         // int(window_width/8)]
+            select_col_B = 1 + select_col // int(window_height/8)
+            if B.piece_check(select_row_B, select_col_B):
+                for p in White:
+                    if White[p].get_loc() == select_row_B + str(select_col_B):
+                        pass
+#            select_mouse_pos = pygame.mouse.get_pos()
+#            print(select_mouse_pos[0])
+#            if ((select_mouse_pos[0] >= pawn_pos[0]) and
+#                    (select_mouse_pos[0] <= pawn_pos[0]+square_width) and
+#                    (select_mouse_pos[1] >= pawn_pos[1]) and
+#                    (select_mouse_pos[1] <= pawn_pos[1]+square_height)):
+#                        pawn_pos = piece_move(select_mouse_pos)
             continue
 pygame.quit()
 quit()

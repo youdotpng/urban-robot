@@ -22,7 +22,7 @@ class Piece:
         self.name = name
 
     def get_name(self):
-        return name
+        return self.name
 
 class Pawn(Piece):  
     def move(self, candidate):
@@ -65,12 +65,16 @@ class Board:
         for j in ['A','B','G','H']:
             for i in range(1,9,1):
                 self.board[j+str(i)] = 1
-    
-                
-                
+
+    def piece_check(self, row, col):
+        if self.board[row+str(col)] == 1:
+            return(True)
+        if self.board[row+str(col)] == 0:
+            return(False)
+        else:
+            raise
         
-        
-def main():
+def Boardset():
     B = Board()
 
     Black = [0]*16
@@ -102,7 +106,7 @@ def main():
         white_loc = White[i].get_loc()
         print(black_loc)
         print(white_loc)
-        
+    return(B, Black, White)    
             
     
 
