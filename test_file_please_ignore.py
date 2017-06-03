@@ -73,13 +73,8 @@ sprite_width = 50
 sprite_height = 50
 
 
-# for testing
-B, Black, White = Boardset()
-test_pawn = Pawn()
-print(B.board)
-print(test_pawn.get_name())
-print(test_pawn.get_loc())
-pawn_pos = (5*square_width, 0)
+
+
 # Board logic x+y%2 == 0 -> black square, x=y%2 ==1  -> white square
 
 for i in range(0, 8):
@@ -100,6 +95,17 @@ for i in range(0, 8):
                                   window_height/8)
                                  )
 
+# for testing
+pygame.display.flip()
+B, Black, White = Boardset(window)
+# test_pawn = Pawn(str_loc='H8')
+#print(B.board)
+#print(test_pawn.get_name())
+#print(test_pawn.get_loc())
+#pawn_pos = test_pawn.get_pixel_loc(square_width, square_height)
+
+#window.blit(test_pawn.sprite[0], test_pawn.get_pixel_loc(square_width, square_height))
+pygame.display.flip()
 # -------Piece Information
 sprite_sheet = pygame.image.load("Chees_piece.png")
 
@@ -140,20 +146,20 @@ clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
 while not done:
-    if set_pieces:
-        for i in range(0, 6):
-            # the x location of the sprite is given by:
-            # (x_square + (sq_width - sprite_size)/2)
-            set_pieces = False
-            window.blit(white[i],
-                        (x+(square_width - sprite_width)/2,
-                        y+(square_height - sprite_height)/2+7*square_height))
-            window.blit(black[i],
-                        (x+(square_width - sprite_width)/2,
-                        y+(square_height - sprite_height)/2))
-            x += square_width
-            pygame.display.flip()
-    # --- Main event loop
+#    if set_pieces:
+#        for i in range(0, 6):
+#            # the x location of the sprite is given by:
+#            # (x_square + (sq_width - sprite_size)/2)
+#            set_pieces = False
+#            window.blit(white[i],
+#                        (x+(square_width - sprite_width)/2,
+#                        y+(square_height - sprite_height)/2+7*square_height))
+#            window.blit(black[i],
+#                        (x+(square_width - sprite_width)/2,
+#                        y+(square_height - sprite_height)/2))
+#            x += square_width
+#            pygame.display.flip()
+#    # --- Main event loop
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
@@ -195,16 +201,18 @@ while not done:
                          // int(window_width/8)]
             select_col_B = 1 + select_col // int(window_height/8)
             if B.piece_check(select_row_B, select_col_B):
+                print("You selected a Piece!")
                 for p in White:
-                    if White[p].get_loc() == select_row_B + str(select_col_B):
-                        pass
-#            select_mouse_pos = pygame.mouse.get_pos()
-#            print(select_mouse_pos[0])
-#            if ((select_mouse_pos[0] >= pawn_pos[0]) and
-#                    (select_mouse_pos[0] <= pawn_pos[0]+square_width) and
-#                    (select_mouse_pos[1] >= pawn_pos[1]) and
-#                    (select_mouse_pos[1] <= pawn_pos[1]+square_height)):
-#                        pawn_pos = piece_move(select_mouse_pos)
+                    print(select_row_B + str(select_col_B))
+                    if p.get_loc() == select_row_B + str(select_col_B):
+                        print(p)
+            select_mouse_pos = pygame.mouse.get_pos()
+            print(select_mouse_pos[0])
+            if ((select_mouse_pos[0] >= pawn_pos[0]) and
+                    (select_mouse_pos[0] <= pawn_pos[0]+square_width) and
+                    (select_mouse_pos[1] >= pawn_pos[1]) and
+                    (select_mouse_pos[1] <= pawn_pos[1]+square_height)):
+                        pawn_pos = piece_move(select_mouse_pos)
             continue
 pygame.quit()
 quit()
