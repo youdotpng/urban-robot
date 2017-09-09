@@ -1,5 +1,10 @@
 import pygame
 
+BLACK = (   0,   0,   0)
+WHITE = ( 255, 255, 255)
+GREEN = (   0, 255,   0)
+RED   = ( 255,   0,   0)
+BLUE  = (   0,   0, 255)
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 512
 SQUARE_WIDTH = WINDOW_WIDTH/8
@@ -46,7 +51,7 @@ class Piece:
             black[i] = sprite_sheet.subsurface(sprite_sheet.get_clip())
         return (white, black)
 
-    def piece_move(self, pos):
+    def piece_move(self, window, B):
             finish = False
             while(not finish):
                 #--- Wait for user to select a new square
@@ -58,6 +63,7 @@ class Piece:
                     if event.type == pygame.MOUSEBUTTONDOWN: 
 #                        print(pos[0],pos[1])
 #                        print(int(self.pixel_loc_centered[0])//int(WINDOW_WIDTH/8.0), int(pos[1])//int(WINDOW_HEIGHT/8.0))
+                        pos = pygame.mouse.get_pos()
                         print(pos[0] // (WINDOW_WIDTH/8.0) + pos[1] // (WINDOW_WIDTH/8.0) % 2 == 1)
                         if not((pygame.mouse.get_pos()[0] >= self.pixel_loc_centered[0]) and
                                (pygame.mouse.get_pos()[0] <= self.pixel_loc_centered[0]+SQUARE_WIDTH) and
@@ -71,30 +77,39 @@ class Piece:
 #                            print(y+(SQUARE_HEIGHT - self.sprite_height)/2)
                             # x2 = int(pos2[0] // (WINDOW_WIDTH/8))
                             # y2 = int(pos2[1] // (WINDOW_HEIGHT/8))
-                            window.blit(black[5],
-                                       (int(x * (WINDOW_WIDTH/8) + (SQUARE_WIDTH - sprite_width)/2),
-                                       int(y * (WINDOW_WIDTH/8) + (SQUARE_HEIGHT - sprite_height)/2)))
-                            if (int(pos[0]) // int(WINDOW_WIDTH/8.0) + int(pos[1]) // int(WINDOW_WIDTH/8.0)) % 2 == 1:
+                            window.blit(self.sprite,
+                                       (int(x * (WINDOW_WIDTH/8) + (SQUARE_WIDTH - self.sprite_width)/2),
+                                       int(y * (WINDOW_WIDTH/8) + (SQUARE_HEIGHT - self.sprite_height)/2)))
+                            if (int(pos[0]) // int(WINDOW_WIDTH/8.0) + int(pos[1]) // int(WINDOW_WIDTH/8.0)) % 2 == 0:
                                 print("White")
                                 pygame.draw.rect(window, WHITE,
-                                                 ((int(pos[0]) // int(WINDOW_WIDTH/8.0) * (WINDOW_WIDTH/8.0)),
-                                                  (int(pos[1]) // int(WINDOW_WIDTH/8.0) * (WINDOW_HEIGHT/8.0)),
+                                                 ((int(self.get_pixel_loc(SQUARE_WIDTH, SQUARE_HEIGHT)[0]) // int(WINDOW_WIDTH/8.0) * (WINDOW_WIDTH/8.0)),
+                                                  (int(self.get_pixel_loc(SQUARE_WIDTH, SQUARE_HEIGHT)[1]) // int(WINDOW_WIDTH/8.0) * (WINDOW_HEIGHT/8.0)),
                                                   WINDOW_WIDTH/8.0,
                                                   WINDOW_HEIGHT/8.0)
                                                  )
                             else:
-                                print("Red")
+                                print("Black")
                                 pygame.draw.rect(window, BLACK,
-                                                 ((int(pos[0]) // int(WINDOW_WIDTH/8.0) * (WINDOW_WIDTH/8.0)),
-                                                  (int(pos[1]) // int(WINDOW_WIDTH/8.0) * (WINDOW_HEIGHT/8.0)),
+                                                 ((int(self.get_pixel_loc(SQUARE_WIDTH, SQUARE_HEIGHT)[0]) // int(WINDOW_WIDTH/8.0) * (WINDOW_WIDTH/8.0)),
+                                                  (int(self.get_pixel_loc(SQUARE_WIDTH, SQUARE_HEIGHT)[1]) // int(WINDOW_WIDTH/8.0) * (WINDOW_HEIGHT/8.0)),
                                                   WINDOW_WIDTH/8.0,
                                                   WINDOW_HEIGHT/8.0)
                                                  )
                             # print (x)
                             # print (y)
                             pygame.display.flip()
-                            return ((x * (WINDOW_WIDTH/8), y * (WINDOW_WIDTH/8)))
-
+                            select_row_B = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][pos[0]
+                             // int(WINDOW_WIDTH/8)]
+                            select_col_B = 8 -  pos[1] // int(WINDOW_HEIGHT/8)
+                            print(self.get_loc())
+                            B.board[self.get_loc()]=0
+                            self.set_loc(select_row_B+str(select_col_B))
+                            B.board[self.get_loc()]=1
+                            print(self.get_loc())
+                            finish = True
+                            #return ((x * (WINDOW_WIDTH/8), y * (WINDOW_WIDTH/8)))
+                            
 
     def __str__(self):
         return self.name

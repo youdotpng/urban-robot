@@ -199,20 +199,27 @@ while not done:
             select_row, select_col = pygame.mouse.get_pos()
             select_row_B = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][select_row
                          // int(window_width/8)]
-            select_col_B = 1 + select_col // int(window_height/8)
+            select_col_B = 8 -  select_col // int(window_height/8)
             if B.piece_check(select_row_B, select_col_B):
                 print("You selected a Piece!")
                 for p in White:
                     print(select_row_B + str(select_col_B))
                     if p.get_loc() == select_row_B + str(select_col_B):
-                        print(p)
-            select_mouse_pos = pygame.mouse.get_pos()
-            print(select_mouse_pos[0])
-            if ((select_mouse_pos[0] >= pawn_pos[0]) and
-                    (select_mouse_pos[0] <= pawn_pos[0]+square_width) and
-                    (select_mouse_pos[1] >= pawn_pos[1]) and
-                    (select_mouse_pos[1] <= pawn_pos[1]+square_height)):
-                        pawn_pos = piece_move(select_mouse_pos)
+                        p_name = p
+                        break
+                for p in Black:
+                    print(select_row_B + str(select_col_B))
+                    if p.get_loc() == select_row_B + str(select_col_B):
+                        p_name = p
+                        break
+                p_name.piece_move(window,B)
+                                
+            #print(select_mouse_pos)
+            #if ((select_mouse_pos[0] >= pawn_pos[0]) and
+             #       (select_mouse_pos[0] <= pawn_pos[0]+square_width) and
+              #      (select_mouse_pos[1] >= pawn_pos[1]) and
+               #     (select_mouse_pos[1] <= pawn_pos[1]+square_height)):
+                #        pawn_pos = piece_move(select_mouse_pos)
             continue
 pygame.quit()
 quit()
